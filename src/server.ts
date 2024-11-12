@@ -1,9 +1,8 @@
-import * as dotenv from 'dotenv'; 
+import * as dotenv from "dotenv"; 
 const result = dotenv.config();
 if (result.error) {  
-    console.log(`Error loading environment variables, aborting, ${result.error});
-  }`);  
-  process.exit(1) //kill our processes with error call 1
+  console.log(`Error loading environment variables, aborting.`);  
+  process.exit(1); //kill our processes with error call 1
 }
 
 console.log(process.env.PORT);
@@ -27,16 +26,21 @@ function setupExpress() {
 }
 function startServer() {
   //console.log(process.argv) //Node.js processes arguments, contains all command line arguments
-  
-  const portArg = process.argv[2]; //port number
   let port: number; //transform port number to type number
-  if (isInteger(portArg)) {
+  const portEnv = process.env.PORT; //from .env
+  const portArg = process.argv[2]; //port number from package.json start-dev-server
+  
+  if (isInteger(portEnv)) {
+    port = parseInt(portEnv);
+  }
+  
+  if (!port && isInteger(portArg)) {
     port = parseInt(portArg);
   }
 
   //default port, if it not passing in argv
   if (!port) { 
-    port = 9020;
+    port = 9050;
   }
 
   app.listen(port, () => {
